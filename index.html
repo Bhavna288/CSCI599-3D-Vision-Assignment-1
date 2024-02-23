@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Assignment 1</title>
+    <style>
+        body {
+            margin: 100px;
+        }
+
+        #container1,
+        .container-div {
+            /* div center*/
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+    <script type="importmap">
+        {
+          "imports": {
+            "three": "https://unpkg.com/three@0.147.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.147.0/examples/jsm/"
+          }
+        }
+    </script>
+</head>
+
+<body>
+    <h1 style="text-align: center;">Assignment 1: Surface Mesh Simplication and Subdivision</h1>
+    <h2>Introduction</h2>
+    <p>For this assignment, you will be implementing two algorithms covering: 1. Loop Subdivision 2. Quadratic Error
+        Mesh Decimation over any 3D object.
+    <ul>
+        <li><a href="https://en.wikipedia.org/wiki/Subdivision_surface#Loop_subdivision_surface">Loop Subdivision</a>
+        </li>
+        <li><a href="https://www.cs.cmu.edu/~./garland/Papers/quadrics.pdf">Quadric Error Mesh Decimation</a></li>
+    </ul>
+    We have made available a visualization tool using the Three.js library implemented in "./js/assignment1.js" and an
+    example implementation located in "./assignments/assignment1.py". Your objective is to create implementations for
+    both "subdivision_loop" and "simplify_quadric_error". You are encouraged to use a programming language with which
+    you are comfortable. The output results should be in the obj format, and you must visualize your outcomes
+    accordingly.
+    <br><br>
+    <b>How to Submit: </b>Please submit this template file along with your implementation as a zip file. The zip file
+    should contain your source code, the generated results in OBJ mesh format, and a report that has been modified using
+    this HTML file. The report should comprise your results and a concise explanation of your implementation.
+    Alternatively, you may choose to create a GitHub repository containing all these elements and provide a link for
+    submission.
+    <br><br>
+    <b>Grading: </b>The grading is based on the correctness of your implementation. You are encouraged to use the
+    visualization tool to debug your implementation. You can also use the visualization tool to test your implementation
+    on other 3D models. You can find an example of 3D model in the "./assets" folder.</p>
+    </p>
+    <h2>Background</h2>
+    <p>
+        In computer graphics, mesh subdivision and mesh decimation are fundamental techniques used for modifying and
+        optimizing
+        3D models. Mesh subdivision, particularly the Loop Subdivision algorithm, is used to refine a coarse mesh into a
+        smoother and more detailed representation. On the other hand, mesh decimation, specifically the Quadratic Error
+        Mesh
+        Decimation algorithm, aims to simplify a complex mesh while preserving its overall shape and features.
+
+    </p>
+    <h2>Data Structure</h2>
+    <p>
+        <b>Design Logic </b>
+        <br><br>
+        <b>Implement Details </b>
+
+    </p>
+    <h2>Loop Subdivision</h2>
+    <p>
+        <b>Algorithm </b>
+    <p>
+        The Loop subdivision algorithm in this implementation follows a series of steps to refine the mesh:
+    <ul>
+        <li>Preparation: Identify edges, and classify them into interior and boundary types.</li>
+        <li>Odd Vertices Creation: For each edge, create a new vertex either at the midpoint or adjusted based on
+            adjacent
+            vertices.</li>
+        <li>Even Vertices Update: Adjust the positions of original vertices based on their neighbors, with special
+            handling
+            for boundary cases.</li>
+        <li>Mesh Reconstruction: Assemble the new mesh using the updated vertices and newly defined faces.</li>
+    </ul>
+    </p>
+    <br><br>
+    <b>Implement Details </b>
+    <p>
+        The code utilizes the trimesh library for mesh operations, with additional logic to handle Loop subdivision.
+        Special considerations are made for boundary edges and vertices to ensure smooth transitions and to prevent
+        artifacts at the mesh boundaries. The algorithm is designed to be applied iteratively, though the provided
+        implementation focuses on a single iteration.
+
+    </p>
+    <br><br>
+    <b>Results </b>
+    <p>
+        To visualize the results, we can apply the subdivision_loop function to a sample mesh and then render the before
+        and
+        after states. This visualization will demonstrate the smoothing effect of the Loop subdivision on the mesh's
+        geometry.
+        Let's proceed with generating a visualization of a sample mesh before and after applying one iteration of Loop
+        subdivision.
+    </p>
+    <p>
+        The visualization above compares an original coarse 3D mesh to the same mesh after applying one iteration of
+        Loop
+        subdivision. On the left, you can see the "Original Mesh," which is angular and simplistic, highlighting the
+        defined
+        faces and edges. On the right, the "Subdivided Mesh" appears smoother and more detailed, as a result of the
+        subdivision
+        process that increases vertex count and redistributes vertices for a smoother surface. This transformation
+        exemplifies
+        the effect of the Loop subdivision algorithm on mesh smoothing and refinement.
+    </p>
+
+    </p>
+    <div id="container1"></div>
+    <h2>Quadric Error Mesh Decimation</h2>
+    <p>
+        <b>Algorithm </b>
+    <p>
+        The Quadric Error Metrics (QEM) algorithm is a technique used to simplify meshes while preserving their original
+        shape as much as possible. The core idea is to iteratively collapse edges in the mesh to reduce the total number
+        of vertices, edges, and faces, based on a calculated error metric that estimates the deviation from the original
+        mesh surface.
+    </p>
+    <br><br>
+    <b>Implement Details </b>
+    <p>
+    <ul>
+        <li>Quadric Matrices Computation: For each vertex, a quadric matrix is computed based on the normals and
+            distances of the
+            adjacent faces. This matrix encapsulates the error introduced by moving the vertex along the surface.</li>
+
+        <li>Error Metric for Edge Collapses: The algorithm calculates an error metric for collapsing each edge. This
+            metric is derived from the quadric matrices of the vertices at the ends of the edge, aiming to minimize the
+            surface deviation.</li>
+
+        <li>Priority Queue of Edges: Edges are prioritized based on their error metric, with the least error edges being
+            collapsed first. This ensures that the most geometrically significant features of the mesh are preserved
+            longer.</li>
+
+        <li>Edge Collapse: The edge with the minimum error is collapsed by merging its two vertices into one, updating
+            the mesh topology accordingly. The quadric matrices are also updated to reflect this change.</li>
+
+        <li>Vertex and Face Updates: After an edge collapse, the algorithm updates the mesh's vertices, faces, and their
+            associations to ensure consistency.</li>
+
+        <li>Target Vertex Count: The process repeats until the mesh reaches the desired level of simplification,
+            specified by a target vertex count.</li>
+
+    </ul>
+    </p>
+    <br><br>
+    <b>Results </b>
+    <p>
+        The QEM algorithm effectively reduces the complexity of a mesh by minimizing the geometric error at each step,
+        thereby preserving the original shape as closely as possible. The algorithm is particularly useful for
+        applications requiring lower-polygon models without significantly sacrificing visual fidelity, such as real-time
+        rendering in
+        video games and simulations. To visualize the results, we'll apply the QEM decimation process to a sample mesh
+        and display the original and
+        simplified versions side by side for comparison.
+
+        Let's proceed with generating a visualization.
+
+        The visualization above showcases the effect of applying Quadric Error Mesh Decimation (QEM) to a complex 3D
+        mesh. On
+        the left side, the "Original Mesh" is depicted with a high level of detail, including many vertices, edges, and
+        faces.
+        On the right side, the "Simplified Mesh" demonstrates how the mesh complexity has been reduced through the QEM
+        process.
+        Despite the significant reduction in vertices and faces, the simplified mesh retains the overall shape and key
+        features
+        of the original, illustrating the efficiency of the QEM algorithm in preserving geometric fidelity while
+        lowering the
+        model's complexity. This process is especially valuable in applications requiring optimized models that maintain
+        visual
+        quality.
+
+
+    </p>
+
+    </p>
+    <h2>Extra Credits</h2>
+    <div class="container-div">
+        <div id="container2"></div>
+        <div id="container3"></div>
+        <div id="container4"></div>
+        <div id="container5"></div>
+        <div id="container6"></div>
+        <div id="container7"></div>
+    </div>
+    <script type="module" src="js/script.js"></script>
+</body>
+
+</html>

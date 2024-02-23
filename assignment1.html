@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>OBJ Viewer</title>
+	<style>
+		body {
+			margin: 0;
+		}
+
+		canvas {
+			display: block;
+		}
+	</style>
+</head>
+
+<body>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+	<script src="https://threejs.org/examples/js/loaders/OBJLoader.js"></script>
+	<script>
+		let scene, camera, renderer;
+
+		function init () {
+			// Scene
+			scene = new THREE.Scene();
+			scene.background = new THREE.Color(0xdddddd);
+
+			// Camera
+			camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 5000);
+			camera.rotation.y = 45 / 180 * Math.PI;
+			camera.position.x = 800;
+			camera.position.y = 100;
+			camera.position.z = 1000;
+
+			// Renderer
+			renderer = new THREE.WebGLRenderer({ antialias: true });
+			renderer.setSize(window.innerWidth, window.innerHeight);
+			document.body.appendChild(renderer.domElement);
+
+			// Lighting
+			let hlight = new THREE.AmbientLight(0x404040, 10);
+			scene.add(hlight);
+			let directionalLight = new THREE.DirectionalLight(0xffffff, 100);
+			directionalLight.position.set(0, 1, 0);
+			directionalLight.castShadow = true;
+			scene.add(directionalLight);
+
+			// Load Model
+			let loader = new THREE.OBJLoader();
+			loader.load('assets/bunny.obj', function (obj) {
+				scene.add(obj);
+				obj.position.y -= 60;
+			});
+
+			// Controls (optional)
+			// If you want to add controls to rotate/zoom the scene, include OrbitControls.js and uncomment the following lines.
+			// const controls = new THREE.OrbitControls(camera, renderer.domElement);
+			// controls.addEventListener('change', renderer);
+
+			animate();
+		}
+
+		function animate () {
+			renderer.render(scene, camera);
+			requestAnimationFrame(animate);
+		}
+
+		init();
+	</script>
+</body>
+
+</html>
