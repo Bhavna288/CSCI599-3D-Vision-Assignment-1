@@ -111,7 +111,8 @@ function createScene (containterId, objPath) {
 
 }
 
-createScene('container1', 'assets/bunny.obj');
+createScene('container0', 'assets/bunny.obj');
+createScene('container1', 'assets/bunny_subdivided.obj');
 createScene('container2', 'assets/bunny.obj');
 createScene('container3', 'assets/bunny_subdivided.obj');
 createScene('container4', 'assets/bunny_subdivided_10000.obj');

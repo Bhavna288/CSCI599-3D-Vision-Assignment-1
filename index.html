@@ -9,7 +9,6 @@
             margin: 100px;
         }
 
-        #container1,
         .container-div {
             /* div center*/
             width: 100%;
@@ -17,6 +16,17 @@
             display: flex;
             justify-content: center;
             align-items: center;
+        }
+
+        .subdivision-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #container0,
+        #container1 {
+            width: 50%;
         }
     </style>
     <script type="importmap">
@@ -31,7 +41,7 @@
 
 <body>
     <h1 style="text-align: center;">Assignment 1: Surface Mesh Simplication and Subdivision</h1>
-    <h2>Introduction</h2>
+    <!-- <h2>Introduction</h2>
     <p>For this assignment, you will be implementing two algorithms covering: 1. Loop Subdivision 2. Quadratic Error
         Mesh Decimation over any 3D object.
     <ul>
@@ -54,7 +64,7 @@
     <b>Grading: </b>The grading is based on the correctness of your implementation. You are encouraged to use the
     visualization tool to debug your implementation. You can also use the visualization tool to test your implementation
     on other 3D models. You can find an example of 3D model in the "./assets" folder.</p>
-    </p>
+    </p> -->
     <h2>Background</h2>
     <p>
         In computer graphics, mesh subdivision and mesh decimation are fundamental techniques used for modifying and
@@ -78,14 +88,12 @@
     <p>
         The Loop subdivision algorithm in this implementation follows a series of steps to refine the mesh:
     <ul>
-        <li>Preparation: Identify edges, and classify them into interior and boundary types.</li>
-        <li>Odd Vertices Creation: For each edge, create a new vertex either at the midpoint or adjusted based on
-            adjacent
-            vertices.</li>
-        <li>Even Vertices Update: Adjust the positions of original vertices based on their neighbors, with special
-            handling
-            for boundary cases.</li>
-        <li>Mesh Reconstruction: Assemble the new mesh using the updated vertices and newly defined faces.</li>
+        <li><b>Preparation:</b> Identify edges, and classify them into interior and boundary types.</li>
+        <li><b>Odd Vertices Creation:</b> For each edge, create a new vertex either at the midpoint or adjusted based on
+            adjacent vertices.</li>
+        <li><b>Even Vertices Update:</b> Adjust the positions of original vertices based on their neighbors, with
+            special handling for boundary cases.</li>
+        <li><b>Mesh Reconstruction:</b> Assemble the new mesh using the updated vertices and newly defined faces.</li>
     </ul>
     </p>
     <br><br>
@@ -100,27 +108,26 @@
     <br><br>
     <b>Results </b>
     <p>
-        To visualize the results, we can apply the subdivision_loop function to a sample mesh and then render the before
-        and
-        after states. This visualization will demonstrate the smoothing effect of the Loop subdivision on the mesh's
-        geometry.
-        Let's proceed with generating a visualization of a sample mesh before and after applying one iteration of Loop
-        subdivision.
+        In the below section document, two images are presented side by side, showcasing the original 3D object and the
+        output of the Loop Subdivision algorithm, respectively. The resultant subdivided mesh comprises 159,142 vertices
+        and 317,952 faces, reflecting the increased complexity and refinement achieved through the application of the
+        Loop Subdivision algorithm. The juxtaposition of the original and subdivided meshes allows for a clear visual
+        comparison, highlighting the enhancements in detail and smoothness brought about by the subdivision process.
     </p>
     <p>
         The visualization above compares an original coarse 3D mesh to the same mesh after applying one iteration of
-        Loop
-        subdivision. On the left, you can see the "Original Mesh," which is angular and simplistic, highlighting the
-        defined
-        faces and edges. On the right, the "Subdivided Mesh" appears smoother and more detailed, as a result of the
-        subdivision
-        process that increases vertex count and redistributes vertices for a smoother surface. This transformation
-        exemplifies
-        the effect of the Loop subdivision algorithm on mesh smoothing and refinement.
+        Loop subdivision. On the left, you can see the "Original Mesh," which is angular and simplistic, highlighting
+        the defined faces and edges. On the right, the "Subdivided Mesh" appears smoother and more detailed, as a result
+        of the subdivision process that increases vertex count and redistributes vertices for a smoother surface. This
+        transformation exemplifies the effect of the Loop subdivision algorithm on mesh smoothing and refinement.
     </p>
 
     </p>
-    <div id="container1"></div>
+    <div class="subdivision-container">
+        <div id="container0"></div>
+        <div id="container1"></div>
+
+    </div>
     <h2>Quadric Error Mesh Decimation</h2>
     <p>
         <b>Algorithm </b>
@@ -134,61 +141,80 @@
     <b>Implement Details </b>
     <p>
     <ul>
-        <li>Quadric Matrices Computation: For each vertex, a quadric matrix is computed based on the normals and
+        <li><b>Quadric Matrices Computation:</b> For each vertex, a quadric matrix is computed based on the normals and
             distances of the
             adjacent faces. This matrix encapsulates the error introduced by moving the vertex along the surface.</li>
 
-        <li>Error Metric for Edge Collapses: The algorithm calculates an error metric for collapsing each edge. This
+        <li><b>Error Metric for Edge Collapses:</b> The algorithm calculates an error metric for collapsing each edge.
+            This
             metric is derived from the quadric matrices of the vertices at the ends of the edge, aiming to minimize the
             surface deviation.</li>
 
-        <li>Priority Queue of Edges: Edges are prioritized based on their error metric, with the least error edges being
+        <li><b>Priority Queue of Edges:</b> Edges are prioritized based on their error metric, with the least error
+            edges
+            being
             collapsed first. This ensures that the most geometrically significant features of the mesh are preserved
             longer.</li>
 
-        <li>Edge Collapse: The edge with the minimum error is collapsed by merging its two vertices into one, updating
+        <li><b>Edge Collapse:</b> The edge with the minimum error is collapsed by merging its two vertices into one,
+            updating
             the mesh topology accordingly. The quadric matrices are also updated to reflect this change.</li>
 
-        <li>Vertex and Face Updates: After an edge collapse, the algorithm updates the mesh's vertices, faces, and their
+        <li><b>Vertex and Face Updates:</b> After an edge collapse, the algorithm updates the mesh's vertices, faces,
+            and
+            their
             associations to ensure consistency.</li>
 
-        <li>Target Vertex Count: The process repeats until the mesh reaches the desired level of simplification,
+        <li><b>Target Vertex Count:</b> The process repeats until the mesh reaches the desired level of simplification,
             specified by a target vertex count.</li>
 
     </ul>
     </p>
     <br><br>
     <b>Results </b>
-    <p>
-        The QEM algorithm effectively reduces the complexity of a mesh by minimizing the geometric error at each step,
-        thereby preserving the original shape as closely as possible. The algorithm is particularly useful for
-        applications requiring lower-polygon models without significantly sacrificing visual fidelity, such as real-time
-        rendering in
-        video games and simulations. To visualize the results, we'll apply the QEM decimation process to a sample mesh
-        and display the original and
-        simplified versions side by side for comparison.
+    <section>
+        <p>The application of the Quadric Error Metrics (QEM) algorithm to the 3D mesh has yielded a series of
+            simplified
+            models, each representing a different level of detail. The QEM approach systematically reduces the
+            complexity of
+            the mesh while striving to maintain the overall shape and appearance of the original model. This is achieved
+            by
+            iteratively collapsing edges that contribute the least to the overall error metric, which is a measure of
+            how
+            much the surface deviates from the original.</p>
 
-        Let's proceed with generating a visualization.
+        <p>The following section shows 6 objects, the first one is the original, the second is the outcome of loop
+            subdivision with 317952 faces and the remaining are the outcomes of QEM.
+            The simplification process was performed with varying target face counts, resulting in four distinct levels
+            of
+            detail:</p>
+        <ul>
+            <li><strong>10,000 faces:</strong> This level maintains a high degree of detail, closely resembling the
+                original
+                model with only minor changes in the mesh complexity.</li>
+            <li><strong>1,000 faces:</strong> A more pronounced simplification is observed, with smoother surfaces and
+                less
+                definition in the finer features of the model.</li>
+            <li><strong>500 faces:</strong> Further reduction in complexity leads to more noticeable changes in the
+                model's
+                geometry, yet the overall form remains identifiable.</li>
+            <li><strong>200 faces:</strong> At this level, the model is significantly simplified, with an abstracted
+                form
+                where only the most basic features are retained.</li>
+        </ul>
 
-        The visualization above showcases the effect of applying Quadric Error Mesh Decimation (QEM) to a complex 3D
-        mesh. On
-        the left side, the "Original Mesh" is depicted with a high level of detail, including many vertices, edges, and
-        faces.
-        On the right side, the "Simplified Mesh" demonstrates how the mesh complexity has been reduced through the QEM
-        process.
-        Despite the significant reduction in vertices and faces, the simplified mesh retains the overall shape and key
-        features
-        of the original, illustrating the efficiency of the QEM algorithm in preserving geometric fidelity while
-        lowering the
-        model's complexity. This process is especially valuable in applications requiring optimized models that maintain
-        visual
-        quality.
+        <p>Throughout the simplification process, the QEM algorithm has successfully demonstrated its capability to
+            produce
+            a range of simplified meshes from the original high-resolution model. These meshes can be used in various
+            applications where different levels of detail are required, such as in graphics rendering, where lower
+            detail
+            models may be preferred for real-time performance or distant viewing, while higher detail models are used
+            for
+            close-up shots or high-quality renders.</p>
+    </section>
 
 
     </p>
-
-    </p>
-    <h2>Extra Credits</h2>
     <div class="container-div">
         <div id="container2"></div>
         <div id="container3"></div>
@@ -197,6 +223,42 @@
         <div id="container6"></div>
         <div id="container7"></div>
     </div>
+    <section>
+        <h2>Extra Credits:</h2>
+        <h3>1. Handling Corner Cases in Loop Subdivision</h3>
+        <p>In addressing the corner cases within the Loop Subdivision algorithm, specific attention was given to the
+            handling of boundary cases. This was achieved through a detailed process involving the separation of
+            interior
+            and boundary edges, calculation adjustments for odd and even vertices, and the proper integration of
+            boundary
+            conditions. The steps undertaken are outlined below:</p>
+        <ol>
+            <li><strong>Geometry Preparation:</strong> The initial geometry of the mesh was prepared by extracting
+                vertices
+                and faces, and subsequently, edges were identified and categorized into interior and boundary edges
+                based on
+                their occurrence within the mesh structure.</li>
+            <li><strong>Odd Vertices Calculation:</strong> The positions of odd vertices were initially placed at the
+                midpoint of each edge. For boundary edges, these positions were specifically adjusted to adhere to the
+                boundary conditions, ensuring a smooth transition at the mesh borders.</li>
+            <li><strong>Even Vertices Update:</strong> The positions of even vertices were recalculated with a special
+                consideration for vertices at the boundary. This involved identifying boundary neighbors of each vertex
+                and
+                adjusting the vertex position to maintain mesh integrity at the boundaries.</li>
+            <li><strong>Mesh Reconstruction:</strong> With the updated positions of both odd and even vertices, the mesh
+                was
+                reconstructed. This involved the integration of new vertices and faces, with particular adjustments made
+                to
+                accommodate the boundary conditions, ensuring a seamless and accurate subdivision process.</li>
+        </ol>
+        <p>This comprehensive approach to handling boundary cases in loop subdivision not only enhances the accuracy of
+            the
+            subdivision process but also ensures the robustness of the algorithm in dealing with complex mesh
+            topologies.
+        </p>
+    </section>
+
+
     <script type="module" src="js/script.js"></script>
 </body>
 
