@@ -180,22 +180,37 @@
             geometry.</p>
     </section>
 
-
+    <br><br>
     </p>
     <h2>Loop Subdivision</h2>
-    <p>
-        <b>Algorithm </b>
-    <p>
-        The Loop subdivision algorithm in this implementation follows a series of steps to refine the mesh:
-    <ul>
-        <li><b>Preparation:</b> Identify edges, and classify them into interior and boundary types.</li>
-        <li><b>Odd Vertices Creation:</b> For each edge, create a new vertex either at the midpoint or adjusted based on
-            adjacent vertices.</li>
-        <li><b>Even Vertices Update:</b> Adjust the positions of original vertices based on their neighbors, with
-            special handling for boundary cases.</li>
-        <li><b>Mesh Reconstruction:</b> Assemble the new mesh using the updated vertices and newly defined faces.</li>
-    </ul>
-    </p>
+    <section>
+        <h3>Algorithm</h3>
+        <p>The Loop subdivision algorithm refines meshes by subdividing their faces to create smoother surfaces. It is
+            named
+            after Charles Loop, who introduced it in his master's thesis. The algorithm is based on a set of rules for
+            generating new vertices (odd vertices) and repositioning existing ones (even vertices).</p>
+
+        <h3>Odd Vertices</h3>
+        <p>New vertices are added at the midpoint of each edge. The position of an odd vertex is calculated using the
+            adjacent vertices of the original mesh:</p>
+        <p><em>Odd vertex position</em> = (3/8 &times; (Position of vertex 1 + Position of vertex 2)) + (1/8 &times;
+            (Adjacent vertex 1 + Adjacent vertex 2))</p>
+
+        <h3>Even Vertices</h3>
+        <p>Existing vertices are adjusted based on their neighboring vertices. The new position of an even vertex is
+            calculated as follows:</p>
+        <p><em>Even vertex position</em> = (1 - n &times; β) &times; (Original vertex position) + β &times; Σ (Positions
+            of
+            adjacent vertices)</p>
+        <p>where:</p>
+        <ul>
+            <li><em>n</em> = the number of adjacent vertices</li>
+            <li><em>β</em> = 1/n &times; (5/8 - (3/8 + 1/4 &times; cos(2 &times; π / n))<sup>2</sup>)</li>
+        </ul>
+
+        <p>This iterative process of adding and adjusting vertices results in a smoother mesh that approximates a
+            subdivision surface.</p>
+    </section>
     <br><br>
     <section>
         <section>
@@ -249,7 +264,6 @@
         </section>
 
 
-        <br><br>
         <h3>Results </h3>
         <section>
             <p>The Loop Subdivision process was applied to a 3D mesh model to enhance its geometric detail over three
@@ -296,17 +310,50 @@
 
         </div>
         <h2>Quadric Error Mesh Decimation</h2>
-        <p>
-            <b>Algorithm </b>
-        <p>
-            The Quadric Error Metrics (QEM) algorithm is a technique used to simplify meshes while preserving their
-            original
-            shape as much as possible. The core idea is to iteratively collapse edges in the mesh to reduce the total
-            number
-            of vertices, edges, and faces, based on a calculated error metric that estimates the deviation from the
-            original
-            mesh surface.
-        </p>
+        <section>
+            <h3>Algorithm</h3>
+            <p>The Quadric Error Metrics (QEM) algorithm is a sophisticated technique used for mesh simplification. It
+                reduces
+                the complexity of a 3D mesh while striving to preserve the original shape and features as closely as
+                possible.
+                The algorithm achieves this by iteratively collapsing edges based on a calculated error metric that
+                estimates
+                the deviation from the original surface.</p>
+
+            <h4>Quadric Error Calculation</h4>
+            <p>The core of the QEM algorithm is the computation of the "quadric" error metric for each vertex in the
+                mesh. This
+                metric quantifies the cost of collapsing an edge, allowing the algorithm to prioritize the least
+                impactful
+                collapses. The quadric for a vertex is calculated using the sum of squared distances from the vertex to
+                the
+                planes of all faces adjacent to that vertex. Mathematically, the error quadric Q for a vertex v is given
+                by:</p>
+            <p><em>Q(v) = Σ (d<sub>plane</sub><sup>2</sup>)</em></p>
+            <p>where <em>d<sub>plane</sub></em> is the distance from the vertex to a plane of an adjacent face.</p>
+
+            <h4>Edge Collapse</h4>
+            <p>The algorithm selects edges for collapse based on the combined error quadric of the edge's two vertices.
+                The edge
+                with the lowest error is chosen for collapse in each iteration, and its vertices are merged into a
+                single
+                vertex. The position of the new vertex is determined by minimizing the error quadric resulting from the
+                collapse.</p>
+
+            <h4>Preserving Mesh Integrity</h4>
+            <p>While simplifying the mesh, QEM takes care to maintain the integrity and topological consistency of the
+                mesh.
+                This ensures that the simplified mesh remains a valid representation of the original geometry, albeit
+                with fewer
+                details.</p>
+
+            <p>The effectiveness of QEM in reducing mesh complexity, while maintaining a high degree of fidelity to the
+                original
+                model, makes it invaluable for applications where real-time rendering performance is critical, such as
+                in gaming
+                and virtual reality.</p>
+        </section>
+
         <br><br>
         <b>Implement Details </b>
         <p>
