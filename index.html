@@ -66,16 +66,92 @@
     on other 3D models. You can find an example of 3D model in the "./assets" folder.</p>
     </p> -->
     <h2>Background</h2>
-    <p>
-        In computer graphics, mesh subdivision and mesh decimation are fundamental techniques used for modifying and
-        optimizing
-        3D models. Mesh subdivision, particularly the Loop Subdivision algorithm, is used to refine a coarse mesh into a
-        smoother and more detailed representation. On the other hand, mesh decimation, specifically the Quadratic Error
-        Mesh
-        Decimation algorithm, aims to simplify a complex mesh while preserving its overall shape and features.
+    <section>
+        <p>In the realm of 3D vision, the geometric manipulation of mesh models is fundamental for various applications,
+            including computer graphics, animation, and virtual reality. Two pivotal techniques in mesh processing are
+            Loop
+            subdivision for mesh refinement and Quadric Error Metrics (QEM) for mesh simplification.</p>
 
-    </p>
+        <p><strong>Loop Subdivision</strong> is a method that iteratively refines a mesh by splitting edges and creating
+            smoother surfaces. This technique is rooted in the work of Charles Loop and is widely used for generating
+            higher
+            resolution meshes from coarse geometric data. It is particularly favored for its ability to produce smooth,
+            visually appealing surfaces without altering the original mesh's topology.</p>
+
+        <p><strong>Quadric Error Metrics (QEM)</strong>, on the other hand, is a simplification strategy that reduces
+            the
+            complexity of a mesh while attempting to minimize the geometric error. This approach calculates an error
+            metric
+            for each potential edge collapse, allowing the algorithm to prioritize changes that have the least impact on
+            the
+            mesh's apparent shape. It is highly valued for its ability to create Level of Detail (LOD) models essential
+            for
+            real-time rendering and large-scale visualizations.</p>
+
+        <h2>Implementation Details</h2>
+        <p>For the <strong>Loop subdivision</strong>, the implementation leverages the <code>trimesh</code> library,
+            which
+            provides robust tools for mesh analysis and manipulation. The library's functionality facilitates the
+            subdivision process, enabling seamless refinement of mesh models.</p>
+
+        <p>In contrast, the <strong>QEM</strong> implementation is realized through a bespoke data structure designed to
+            manage complex mesh relationships efficiently. This custom structure facilitates the dynamic calculation of
+            error metrics and the subsequent prioritization of edge collapses, ensuring the mesh simplification is both
+            efficient and effective.</p>
+
+        <p>These techniques showcase the synergy between established algorithms and custom data structures in the field
+            of
+            3D vision, providing a comprehensive toolkit for the detailed and optimized rendering of three-dimensional
+            models.</p>
+    </section>
+
     <h2>Data Structure</h2>
+    <p>The data structures involved are:</p>
+    <ul>
+        <li><strong>Vertices</strong>: A NumPy array of vertex positions in 3D space.</li>
+        <li><strong>Faces</strong>: A NumPy array that defines the vertices of each triangular face.</li>
+        <li><strong>Edges</strong>: A NumPy array that lists the vertex pairs that make up the mesh edges.</li>
+        <li><strong>Unique, Inverse</strong>: Arrays used to identify unique edges and their mapping.</li>
+        <li><strong>Edge_inter, edge_bound</strong>: Arrays that store indices for interior and boundary edges.</li>
+    </ul>
+    <h3>For loop subdivision: Trimesh</h3>
+    <section>
+        <h3>Custom Data Structure for QEM</h3>
+        <p>The implementation of the Quadric Error Metrics (QEM) algorithm for mesh simplification necessitates a
+            sophisticated data structure that can efficiently manage the complex relationships and operations required.
+            This
+            custom structure, as designed in the provided code, supports the following functionalities:</p>
+
+        <ul>
+            <li><strong>Mesh Loading:</strong> Reads mesh data from an OBJ file, extracting vertices and faces to form
+                the
+                initial mesh structure.</li>
+            <li><strong>Edge Construction:</strong> Builds an edge data structure that maps vertices to edges and vice
+                versa, which is critical for identifying edge collapses during simplification.</li>
+            <li><strong>Normal and Center Calculation:</strong> Computes face normals and centers, which are necessary
+                to
+                establish the error metrics for each vertex.</li>
+            <li><strong>Vertex Normal Computation:</strong> Determines vertex normals by averaging the normals of
+                adjacent
+                faces, a step that requires efficient sparse matrix operations.</li>
+            <li><strong>Adjacency Mapping:</strong> Establishes a bidirectional mapping of vertex adjacency, allowing
+                the
+                algorithm to quickly access neighboring vertices and faces.</li>
+            <li><strong>Laplacian Matrix:</strong> Constructs the Laplacian matrix representing the mesh connectivity,
+                facilitating various geometric processing operations.</li>
+            <li><strong>QEM Execution:</strong> Runs the edge collapse operations based on the computed error metrics,
+                progressively simplifying the mesh while aiming to minimize geometric errors.</li>
+            <li><strong>Mesh Reconstruction:</strong> After simplification, the mesh is rebuilt to reflect the new
+                topology,
+                which includes updating vertices and faces as well as recalculating normals and adjacency information.
+            </li>
+        </ul>
+
+        <p>This custom data structure is integral to the QEM algorithm, enabling the efficient and accurate execution of
+            mesh simplification. It allows for the dynamic update of mesh properties and relationships, ensuring the
+            resulting simplified mesh maintains a high fidelity to the original geometry.</p>
+    </section>
+
     <p>
     <section>
         <h2>Mesh Processing Techniques - Desgin Logic</h2>
